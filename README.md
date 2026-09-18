@@ -81,7 +81,7 @@ Based on the data model defined in [src/models.py](src/models.py), create a UML 
 
 Make sure that your class diagram shows the association between **User**, **Course**, and **Enrollment**. 
 
-![Class](pics/CLass_UML.png)
+![Class](pics/Class_UML.png)
 
 ## Baseline Implementation
 
