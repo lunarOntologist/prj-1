@@ -1,3 +1,37 @@
 @startuml use_case
+title Use Case Diagram
 
+actor "Student" as S
+actor "System Admin" as SA
+
+rectangle "Authentication Module" {
+    usecase "Sign Up" as UC1
+    usecase "Log In" as UC2
+    }
+
+note right of UC1 : Sign Up is included in Log In
+
+rectangle "Course Management" {
+    usecase "View All Courses" as UC3
+    usecase "Add Course (Enrollment)" as UC4
+    usecase "Update Grade" as UC5
+    usecase "Delete Course" as UC6
+    }
+
+rectangle "GPA Features" {
+    usecase "View GPA" as UC7
+    }
+
+S --> UC1 : Can sign up
+S --> UC2 : Can log in
+S --> UC3 : Can view all courses
+S --> UC4 : Can add course/enrollment
+S --> UC5 : Can update grade
+S --> UC6 : Can delete course
+S --> UC7 : Can view GPA
+
+SA --> UC1 : Admin can sign up users
+SA --> UC2 : Admin can verify login
+
+note right of S: Only authenticated Students can access Course and GPA features
 @enduml
