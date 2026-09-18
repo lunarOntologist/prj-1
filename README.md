@@ -61,7 +61,7 @@ Assign roles to each team member by completing the table below. A member may tak
 |Faye G.|Manager|
 |Artemis W.|Documenter|
 |Jess C.|Developer|
-|Nikki Z.| |
+|Nikki Z.|Tester|
 
 # Modeling Phase
 
