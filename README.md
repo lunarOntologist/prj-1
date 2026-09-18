@@ -69,6 +69,8 @@ Assign roles to each team member by completing the table below. A member may tak
 
 Based on the project description, perform a requirements analysis by developing a UML use case diagram that captures the system's key functionalities and user interactions.
 
+![Use Case](pics/Use_Case_UML.png)
+
 ## Data Model 
 
 Based on the data model defined in [src/models.py](src/models.py), create a UML class diagram to document the system's structure. The model includes the following entities:
@@ -78,6 +80,8 @@ Based on the data model defined in [src/models.py](src/models.py), create a UML 
 * Enrollment: user_id, course_prefix, course_number, grade
 
 Make sure that your class diagram shows the association between **User**, **Course**, and **Enrollment**. 
+
+![Class](pics/CLass_UML.png)
 
 ## Baseline Implementation
 
