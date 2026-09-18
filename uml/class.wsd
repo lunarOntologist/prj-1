@@ -1,4 +1,31 @@
-@startuml class
+@startuml Class Diagram
+title Class Diagram
 left to right direction
+class User {
+    -id: Integer
+    -name: String
+    -about: String
+    -password: String
+    }
 
+class Course {
+    -prefix: String
+    -number: Integer
+    -name: String
+    -credits: Float
+    }
+
+class Enrollment {
+    -user_id: Integer
+    -course_prefix: String
+    -course_number: Integer
+    -grade: String
+  }
+
+  User "1" *--> "0..*" Enrollment : makes
+  Course "1" *--> "0..*" Enrollment : offers
+  Enrollment *--> "1" Course : belongs to
+  Enrollment *--> "1" User : enrolled by
+
+  note bottom of Enrollment: Foreign keys (user_id, course_prefix, course_number) link to User and Course tables
 @enduml
