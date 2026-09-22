@@ -27,5 +27,8 @@ class Enrollment {
   Enrollment *--> "1" Course : belongs to
   Enrollment *--> "1" User : enrolled by
 
+  User --> Course : is in
+  Course --> User : contains
+
   note bottom of Enrollment: Foreign keys (user_id, course_prefix, course_number) link to User and Course tables
 @enduml
