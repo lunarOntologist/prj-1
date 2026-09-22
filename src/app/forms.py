@@ -1,7 +1,7 @@
 '''
 CS3250 - Software Development Methods and Tools
 Instructor: Thyago Mota
-Student:
+Student: Artemis W., Faye G., Nikki Z., Jess C., Yasir F.
 Description: Homework 03 - Forms for the User Authentication Web App
 '''
 
