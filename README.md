@@ -64,6 +64,12 @@ Assign roles to each team member by completing the table below. A member may tak
 |Nikki Z.|Tester|
 |Yasir F.|Developer/Flex|
 
+Faye: Project coordination/integration(face of the group stuff) + GPA calculation/display + help with enrollment code
+Artemis : README/documentation + database/models + enrollment list/display
+Jess : Main Flask development ie; authentication + create enrollment + delete enrollment
+Nikki: Testing/test report + gpa calculator PyPI package + help with GPA integration
+Yasir: update grades, help with integration of the library package, check codebase for best practices for formatting and syntax
+
 # Modeling Phase
 
 ## Requirements Analysis 
