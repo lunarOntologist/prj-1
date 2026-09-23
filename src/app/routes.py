@@ -39,7 +39,8 @@ def signout():
 @app.route('/enrollments')
 @login_required
 def list_enrollments():
-    return "Work in progress..."
+        enroll = User.query.all()
+        return render_template('enrollments.html', enroll=enroll)
 
 # TODO
 @app.route('/enrollments/delete/<course_prefix>/<course_number>', methods=['POST'])
