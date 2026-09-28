@@ -39,8 +39,9 @@ def signout():
 @app.route('/enrollments')
 @login_required
 def list_enrollments():
-        enroll = Enrollment.query.all()
-        return render_template('enrollments.html', enroll=enroll)
+        current_id = current_user.id
+        enroll = Enrollment.query.filter(Enrollment.user_id == current_id)
+        return render_template('enrollments.html', enrollment=enroll)
 
 # TODO
 @app.route('/enrollments/delete/<course_prefix>/<course_number>', methods=['POST'])
