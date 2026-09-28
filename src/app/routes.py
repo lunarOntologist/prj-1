@@ -52,7 +52,18 @@ def delete_enrollment(course_prefix, course_number):
 @app.route('/enrollments/create', methods=['GET', 'POST'])
 @login_required
 def create_enrollment():
-    return "Work in progress..."
+    form = EnrollmentForm()
+    if form.validate_on_submit():
+        new_enrollment = Enrollment(
+            user_id=current_user.id,
+            course_prefix=form.course_prefix.data, 
+            course_number=form.course_number.data
+        )
+        db.session.add(new_enrollment)
+        db.session.commit()
+        return redirect(url_for('list_enrollments'))
+        
+    return render_template('create_enrollment.html', form=form)
 
 @app.route('/enrollments/update/<course_prefix>/<course_number>', methods=['GET', 'POST'])
 @login_required
