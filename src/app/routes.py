@@ -7,9 +7,8 @@ Description: Project 1 - GPA Calculator
 
 from app import app, db
 from app.models import User, Course, Enrollment
-from app.forms import SignUpForm, LoginForm, EnrollmentForm, DeleteEnrollmentForm, UpdateGradeForm
-# TODO
-# from gpa_calculator_xx import calculate_gpa
+from app.forms import SignUpForm, LoginForm, EnrollmentForm, DeleteEnrollmentForm
+from gpacgo_lib import calculate_gpa
 from flask import render_template, redirect, url_for, request
 from flask_login import login_required, login_user, logout_user, current_user
 import bcrypt
@@ -20,7 +19,6 @@ import bcrypt
 def index(): 
     return render_template('index.html')
 
-# TODO: from hwk-3
 @app.route('/users/signup', methods=['GET', 'POST'])
 def signup():
     form = SignUpForm()
@@ -35,7 +33,6 @@ def signup():
         
     return render_template('signup.html', form=form)
     
-# TODO: from hwk-3
 @app.route('/users/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -48,21 +45,28 @@ def login():
             
     return render_template('login.html', form=form)
 
-# TODO: from hwk-3
 @app.route('/users/signout', methods=['GET', 'POST'])
 def signout():
     logout_user()
     return redirect(url_for('index'))
 
-# TODO
 @app.route('/enrollments')
 @login_required
 def list_enrollments():
-        current_id = current_user.id
-        enroll = Enrollment.query.filter(Enrollment.user_id == current_id)
-        return render_template('enrollments.html', enrollment=enroll)
+    current_id = current_user.id
+    enroll = Enrollment.query.filter(Enrollment.user_id == current_id).all()
+    
+    gpa = calculate_gpa(enroll)
+    
+    delete_form = DeleteEnrollmentForm()
+    
+    return render_template(
+        'enrollments.html', 
+        enrollments=enroll, 
+        gpa=gpa, 
+        delete_form=delete_form
+    )
 
-# TODO
 @app.route('/enrollments/delete/<course_prefix>/<course_number>', methods=['POST'])
 @login_required
 def delete_enrollment(course_prefix, course_number):
@@ -78,16 +82,24 @@ def delete_enrollment(course_prefix, course_number):
         
     return redirect(url_for('list_enrollments'))
 
-# TODO
+
 @app.route('/enrollments/create', methods=['GET', 'POST'])
 @login_required
 def create_enrollment():
     form = EnrollmentForm()
+    courses = Course.query.all()
+    form.course.choices = [
+        (f"{c.prefix} {c.number}", f"{c.prefix} {c.number} - {c.name}") 
+        for c in courses
+    ]
+    
     if form.validate_on_submit():
+        prefix, number = form.course.data.split(' ', 1)
         new_enrollment = Enrollment(
             user_id=current_user.id,
-            course_prefix=form.course_prefix.data, 
-            course_number=form.course_number.data
+            course_prefix=prefix,
+            course_number=number,
+            grade=form.grade.data
         )
         db.session.add(new_enrollment)
         db.session.commit()
