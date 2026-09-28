@@ -39,7 +39,7 @@ def signout():
 @app.route('/enrollments')
 @login_required
 def list_enrollments():
-        enroll = User.query.all()
+        enroll = Enrollment.query.all()
         return render_template('enrollments.html', enroll=enroll)
 
 # TODO
