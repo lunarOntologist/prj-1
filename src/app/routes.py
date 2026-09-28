@@ -7,7 +7,7 @@ Description: Project 1 - GPA Calculator
 
 from app import app, db
 from app.models import User, Course, Enrollment
-from app.forms import SignUpForm, LoginForm, EnrollmentForm, DeleteEnrollmentForm
+from app.forms import SignUpForm, LoginForm, EnrollmentForm, DeleteEnrollmentForm, UpdateGradeForm
 # TODO
 # from gpa_calculator_xx import calculate_gpa
 from flask import render_template, redirect, url_for, request
@@ -53,3 +53,14 @@ def delete_enrollment(course_prefix, course_number):
 @login_required
 def create_enrollment():
     return "Work in progress..."
+
+@app.route('/enrollments/update/<course_prefix>/<course_number>', methods=['GET', 'POST'])
+@login_required
+def update_enrollment(course_prefix, course_number):
+    enrollment = Enrollment.query.filter_by(user_id=current_user.id, course_prefix=course_prefix, course_number=course_number).first_or_404()
+    form = UpdateGradeForm(grade=enrollment.grade)
+    if form.validate_on_submit():
+        enrollment.grade = form.grade.data
+        db.session.commit()
+        return redirect(url_for('list_enrollments'))
+    return render_template('update_enrollment.html', form=form, enrollment=enrollment)
