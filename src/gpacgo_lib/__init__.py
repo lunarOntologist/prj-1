@@ -23,4 +23,18 @@ def calculate_gpa(enrollments):
     Enrollments with no grade yet, or an unrecognized grade, are ignored.
     Returns 0 when there are no graded credits to average.
     '''
-    return 0
+    total_quality_points = 0
+    total_credits = 0
+
+    for enrollment in enrollments:
+        grade = enrollment.grade
+        credits = enrollment.course.credits
+
+        if grade in GRADE_POINTS and credits:
+            total_quality_points += GRADE_POINTS[grade] * credits
+            total_credits += credits
+
+    if total_credits == 0:
+        return 0
+
+    return total_quality_points / total_credits
