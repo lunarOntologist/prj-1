@@ -1,4 +1,3 @@
 .venv
 src/app/_pycache_
 instance/prj1.db
-src/gpacgo_lib
