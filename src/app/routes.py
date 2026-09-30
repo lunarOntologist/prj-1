@@ -25,7 +25,12 @@ def signup():
     if form.validate_on_submit():
         hashed_pw = bcrypt.hashpw(form.passwd.data.encode('utf-8'), bcrypt.gensalt())
         
-        new_user = User(id=form.id.data, passwd=hashed_pw)
+        new_user = User(
+            id=form.id.data,
+            name=form.name.data,
+            about=form.about.data,
+            passwd=hashed_pw
+        )
         
         db.session.add(new_user)
         db.session.commit()
