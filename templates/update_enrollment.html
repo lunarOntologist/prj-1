@@ -2,7 +2,11 @@
 {% block main %}
         <form action="" method="POST" novalidate>
             {{ form.hidden_tag() }}
-            <p>{{ enrollment.course.prefix }} {{ enrollment.course.number }} - {{ enrollment.course.name }}</p>
+            <p>{{ form.course.label }} <br> {{ form.course() }}
+                {% for error in form.course.errors %}
+                    <br><span class="error">{{ error }}</span>
+                {% endfor %}
+            </p>
             <p>{{ form.grade.label }} <br> {{ form.grade() }}</p>
             <p>{{ form.submit() }}</p>
         </form>
