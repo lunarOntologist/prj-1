@@ -41,14 +41,16 @@ def signup():
 @app.route('/users/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    error = None
     if form.validate_on_submit():
         user = User.query.filter_by(id=form.id.data).first()
         
         if user and bcrypt.checkpw(form.passwd.data.encode('utf-8'), user.passwd):
             login_user(user)
             return redirect(url_for('list_enrollments'))
+        error = 'Incorrect user ID or password.'
             
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=form, error=error)
 
 @app.route('/users/signout', methods=['GET', 'POST'])
 def signout():
