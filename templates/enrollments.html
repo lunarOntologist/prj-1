@@ -25,7 +25,7 @@
                             {{ delete_form.hidden_tag() }}
                             {{ delete_form.submit(class_='delete_button') }}
                         </form>
-                        <button type="button" class="button" onclick=simple_action("{{ url_for('update_enrollment', course_prefix=enrollment.course.prefix, course_number=enrollment.course.number) }}")>Edit</button>
+                        <button type="button" class="button edit_button" onclick=simple_action("{{ url_for('update_enrollment', course_prefix=enrollment.course.prefix, course_number=enrollment.course.number) }}")>Edit</button>
                     </td>
                 </tr>
         {% endfor %}

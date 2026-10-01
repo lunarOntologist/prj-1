@@ -147,6 +147,12 @@ input[type="submit"] {
     color: white;
 }
 
+.edit_button {
+    width: 100%;
+    max-width: 700px;
+    box-sizing: border-box;
+}
+
 .delete_button:hover {
     background: #b91c1c;
 }
