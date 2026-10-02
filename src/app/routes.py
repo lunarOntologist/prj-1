@@ -102,6 +102,17 @@ def create_enrollment():
     
     if form.validate_on_submit():
         prefix, number = form.course.data.split(' ', 1)
+
+        existing_enrollment = Enrollment.query.filter_by(
+            user_id=current_user.id,
+            course_prefix=prefix,
+            course_number=number
+        ).first()
+
+        if existing_enrollment:
+            form.course.errors.append('You are already enrolled in this course.')
+            return render_template('create_enrollment.html', form=form)
+
         new_enrollment = Enrollment(
             user_id=current_user.id,
             course_prefix=prefix,
