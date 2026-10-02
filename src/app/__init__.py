@@ -8,8 +8,17 @@ Description: Project 1 - GPA Calculator
 from flask import Flask
 import os
 
-app = Flask("GPA Calculator Web App")
+''' Need this for Linux running (may cause issues on Windows (could be 'prj-1/instance' directory not being read))'''
+base_dir = os.path.dirname(os.path.abspath( __file__))
+root_dir = os.path.abspath(os.path.join(base_dir, '..', '..'))
+
+
+app = Flask("GPA Calculator Web App",
+            template_folder = os.path.join(root_dir, 'templates'),
+            static_folder = os.path.join(root_dir, 'static'))
+
 app.secret_key = 'You will never know!'
+'''End of Linux running code'''
 
 # db initialization
 from flask_sqlalchemy import SQLAlchemy

@@ -25,7 +25,12 @@ def signup():
     if form.validate_on_submit():
         hashed_pw = bcrypt.hashpw(form.passwd.data.encode('utf-8'), bcrypt.gensalt())
         
-        new_user = User(id=form.id.data, passwd=hashed_pw)
+        new_user = User(
+            id=form.id.data,
+            name=form.name.data,
+            about=form.about.data,
+            passwd=hashed_pw
+        )
         
         db.session.add(new_user)
         db.session.commit()
@@ -36,14 +41,16 @@ def signup():
 @app.route('/users/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    error = None
     if form.validate_on_submit():
         user = User.query.filter_by(id=form.id.data).first()
         
         if user and bcrypt.checkpw(form.passwd.data.encode('utf-8'), user.passwd):
             login_user(user)
             return redirect(url_for('list_enrollments'))
+        error = 'Incorrect user ID or password.'
             
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=form, error=error)
 
 @app.route('/users/signout', methods=['GET', 'POST'])
 def signout():
@@ -111,15 +118,31 @@ def create_enrollment():
 @login_required
 def update_enrollment(course_prefix, course_number):
     enrollment = Enrollment.query.filter_by(user_id=current_user.id, course_prefix=course_prefix, course_number=course_number).first_or_404()
-    form = UpdateGradeForm(grade=enrollment.grade)
+    form = UpdateGradeForm(
+        course=f"{enrollment.course_prefix} {enrollment.course_number}",
+        grade=enrollment.grade
+    )
+    courses = Course.query.all()
+    form.course.choices = [
+        (f"{course.prefix} {course.number}", f"{course.prefix} {course.number} - {course.name}")
+        for course in courses
+    ]
+
     if form.validate_on_submit():
-        new_enrollment = Enrollment(
+        selected_prefix, selected_number = form.course.data.split(' ', 1)
+        existing_enrollment = Enrollment.query.filter_by(
             user_id=current_user.id,
-            course_prefix=form.course_prefix.data, 
-            course_number=form.course_number.data
-        )
-        db.session.add(new_enrollment)
-        db.session.commit()
-        return redirect(url_for('list_enrollments'))
+            course_prefix=selected_prefix,
+            course_number=selected_number
+        ).first()
+
+        if existing_enrollment and existing_enrollment is not enrollment:
+            form.course.errors.append('You are already enrolled in that course.')
+        else:
+            enrollment.course_prefix = selected_prefix
+            enrollment.course_number = selected_number
+            enrollment.grade = form.grade.data
+            db.session.commit()
+            return redirect(url_for('list_enrollments'))
         
-    return render_template('create_enrollment.html', form=form)
+    return render_template('update_enrollment.html', form=form, enrollment=enrollment)

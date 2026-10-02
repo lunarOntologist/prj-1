@@ -14,7 +14,7 @@ authors = [
 ]
 description = "Grade Point Average Calculator Group One Library"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",

@@ -6,4 +6,7 @@
             <p>{{ form.passwd.label }} <br> {{ form.passwd(size=30) }}</p>
             <p>{{ form.submit() }}</p>
         </form>
+        {% if error %}
+            <p class="error">{{ error }} <a href="{{ url_for('signup') }}">Sign up</a></p>
+        {% endif %}
 {% endblock %}

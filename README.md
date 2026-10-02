@@ -155,8 +155,11 @@ At this stage, you are NOT expected to write automated tests. Instead, you shoul
 
 |Functionality Tested|Date|Time|Result|
 |--|--|--|--|
-|Sign Up|99/99/23|99:99|passed|
-|...|...|...|...|
+|Sign Up|09/30/26|13:50|Passed|
+|Log In|09/30/26|13:52|Passed|
+|Create Entry|09/30/26|13:53|Passed|
+|Edit Entry|09/30/26|13:54|Passed|
+|Invalid ID|09/30/26|14:40|Passed|
 
 # Deployment Phase
 

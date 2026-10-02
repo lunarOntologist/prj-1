@@ -39,6 +39,7 @@ class DeleteEnrollmentForm(FlaskForm):
     submit = SubmitField('Delete')
 
 class UpdateGradeForm(FlaskForm):
+    course = SelectField('Course', validators=[DataRequired()])
     grade = SelectField('Grade', choices=GRADE_CHOICES, validators=[DataRequired()])
     submit = SubmitField('Confirm')
 
