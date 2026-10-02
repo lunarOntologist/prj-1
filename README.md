@@ -1,3 +1,5 @@
+https://github.com/lunarOntologist/prj-1
+
 # Overview
 
 Your team has been hired to develop a simple web application that allows students to track their GPAs. This project serves as an initial proof of concept to demonstrate your team's capabilities before it is assigned a more complex task. Because the project's requirements are well defined and its scope is limited, the team has chosen the Waterfall process model, following its traditional phases which include:
@@ -63,6 +65,12 @@ Assign roles to each team member by completing the table below. A member may tak
 |Jess C.|Developer|
 |Nikki Z.|Tester|
 |Yasir F.|Developer/Flex|
+
+Faye: Project coordination/integration(face of the group stuff) + GPA calculation/display + help with enrollment code
+Artemis : README/documentation + database/models + enrollment list/display
+Jess : Main Flask development ie; authentication + create enrollment + delete enrollment
+Nikki: Testing/test report + gpa calculator PyPI package + help with GPA integration
+Yasir: update grades, help with integration of the library package, check codebase for best practices for formatting and syntax
 
 # Modeling Phase
 
