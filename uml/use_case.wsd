@@ -22,16 +22,16 @@ rectangle "GPA Features" {
     usecase "View GPA" as UC7
     }
 
-S --> UC1 : Can sign up
-S --> UC2 : Can log in
-S --> UC3 : Can view all courses
-S --> UC4 : Can add course/enrollment
-S --> UC5 : Can update grade
-S --> UC6 : Can delete course
-S --> UC7 : Can view GPA
+S --> UC1
+S --> UC2
+S --> UC3
+S --> UC4
+S --> UC5
+S --> UC6
+S --> UC7
 
-SA --> UC1 : Admin can sign up users
-SA --> UC2 : Admin can verify login
+SA --> UC1
+SA --> UC2
 
 note right of S: Only authenticated Students can access Course and GPA features
 @enduml

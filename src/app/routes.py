@@ -1,15 +1,14 @@
 '''
 CS3250 - Software Development Methods and Tools
 Instructor: Thyago Mota
-Student: 
+Student: Artemis W., Faye G., Nikki Z., Jess C., Yasir F.
 Description: Project 1 - GPA Calculator
 '''
 
 from app import app, db
 from app.models import User, Course, Enrollment
-from app.forms import SignUpForm, LoginForm, EnrollmentForm, DeleteEnrollmentForm
-# TODO
-# from gpa_calculator_xx import calculate_gpa
+from app.forms import SignUpForm, LoginForm, EnrollmentForm, DeleteEnrollmentForm, UpdateGradeForm
+from gpacgo_lib import calculate_gpa
 from flask import render_template, redirect, url_for, request
 from flask_login import login_required, login_user, logout_user, current_user
 import bcrypt
@@ -20,35 +19,141 @@ import bcrypt
 def index(): 
     return render_template('index.html')
 
-# TODO: from hwk-3
 @app.route('/users/signup', methods=['GET', 'POST'])
 def signup():
-    return "Work in progress..."
+    form = SignUpForm()
+    if form.validate_on_submit():
+        hashed_pw = bcrypt.hashpw(form.passwd.data.encode('utf-8'), bcrypt.gensalt())
+        
+        new_user = User(
+            id=form.id.data,
+            name=form.name.data,
+            about=form.about.data,
+            passwd=hashed_pw
+        )
+        
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('login'))
+        
+    return render_template('signup.html', form=form)
     
-# TODO: from hwk-3
 @app.route('/users/login', methods=['GET', 'POST'])
 def login():
-    return "Work in progress..."
+    form = LoginForm()
+    error = None
+    if form.validate_on_submit():
+        user = User.query.filter_by(id=form.id.data).first()
+        
+        if user and bcrypt.checkpw(form.passwd.data.encode('utf-8'), user.passwd):
+            login_user(user)
+            return redirect(url_for('list_enrollments'))
+        error = 'Incorrect user ID or password.'
+            
+    return render_template('login.html', form=form, error=error)
 
-# TODO: from hwk-3
 @app.route('/users/signout', methods=['GET', 'POST'])
 def signout():
-    return "Work in progress..."
+    logout_user()
+    return redirect(url_for('index'))
 
-# TODO
 @app.route('/enrollments')
 @login_required
 def list_enrollments():
-    return "Work in progress..."
+    current_id = current_user.id
+    enroll = Enrollment.query.filter(Enrollment.user_id == current_id).all()
+    
+    gpa = calculate_gpa(enroll)
+    
+    delete_form = DeleteEnrollmentForm()
+    
+    return render_template(
+        'enrollments.html', 
+        enrollments=enroll, 
+        gpa=gpa, 
+        delete_form=delete_form
+    )
 
-# TODO
 @app.route('/enrollments/delete/<course_prefix>/<course_number>', methods=['POST'])
 @login_required
 def delete_enrollment(course_prefix, course_number):
-    return "Work in progress..."
+    enrollment = Enrollment.query.filter_by(
+        user_id=current_user.id, 
+        course_prefix=course_prefix, 
+        course_number=course_number
+    ).first()
+    
+    if enrollment:
+        db.session.delete(enrollment)
+        db.session.commit()
+        
+    return redirect(url_for('list_enrollments'))
 
-# TODO
+
 @app.route('/enrollments/create', methods=['GET', 'POST'])
 @login_required
 def create_enrollment():
-    return "Work in progress..."
+    form = EnrollmentForm()
+    courses = Course.query.all()
+    form.course.choices = [
+        (f"{c.prefix} {c.number}", f"{c.prefix} {c.number} - {c.name}") 
+        for c in courses
+    ]
+    
+    if form.validate_on_submit():
+        prefix, number = form.course.data.split(' ', 1)
+
+        existing_enrollment = Enrollment.query.filter_by(
+            user_id=current_user.id,
+            course_prefix=prefix,
+            course_number=number
+        ).first()
+
+        if existing_enrollment:
+            form.course.errors.append('You are already enrolled in this course.')
+            return render_template('create_enrollment.html', form=form)
+
+        new_enrollment = Enrollment(
+            user_id=current_user.id,
+            course_prefix=prefix,
+            course_number=number,
+            grade=form.grade.data
+        )
+        db.session.add(new_enrollment)
+        db.session.commit()
+        return redirect(url_for('list_enrollments'))
+        
+    return render_template('create_enrollment.html', form=form)
+
+@app.route('/enrollments/update/<course_prefix>/<course_number>', methods=['GET', 'POST'])
+@login_required
+def update_enrollment(course_prefix, course_number):
+    enrollment = Enrollment.query.filter_by(user_id=current_user.id, course_prefix=course_prefix, course_number=course_number).first_or_404()
+    form = UpdateGradeForm(
+        course=f"{enrollment.course_prefix} {enrollment.course_number}",
+        grade=enrollment.grade
+    )
+    courses = Course.query.all()
+    form.course.choices = [
+        (f"{course.prefix} {course.number}", f"{course.prefix} {course.number} - {course.name}")
+        for course in courses
+    ]
+
+    if form.validate_on_submit():
+        selected_prefix, selected_number = form.course.data.split(' ', 1)
+        existing_enrollment = Enrollment.query.filter_by(
+            user_id=current_user.id,
+            course_prefix=selected_prefix,
+            course_number=selected_number
+        ).first()
+
+        if existing_enrollment and existing_enrollment is not enrollment:
+            form.course.errors.append('You are already enrolled in that course.')
+        else:
+            enrollment.course_prefix = selected_prefix
+            enrollment.course_number = selected_number
+            enrollment.grade = form.grade.data
+            db.session.commit()
+            return redirect(url_for('list_enrollments'))
+        
+    return render_template('update_enrollment.html', form=form, enrollment=enrollment)
